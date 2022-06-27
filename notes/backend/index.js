@@ -1,7 +1,13 @@
 import express from 'express';
+import { Note } from './models/note.js';
+import dotenv from 'dotenv';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
+app.use(cors());
+
+dotenv.config();
 
 let notes = [
   {
@@ -32,34 +38,30 @@ app.get('/api/notes', (req, res) => {
   res.json(notes);
 });
 
-app.get('/api/notes/:id', (req, res) => {
+app.get('/api/notes/:id', async (req, res) => {
   try {
-    const id = +req.params.id;
-    const findNote = notes.find((note) => note.id !== id);
-
-    res.json(findNote);
+    const note = await Note.findById(req.params.id);
+    res.json(note);
   } catch (error) {
     res.status(404).end();
   }
 });
 
-app.post('/api/notes', (req, res) => {
-  const { content } = req.body;
-
-  console.log(`content = `, content);
+app.post('/api/notes', async (req, res) => {
+  const { content, important } = req.body;
 
   if (!content) {
     return res.status(400).json({ error: 'no content' });
   }
 
-  const newNote = {
+  const note = new Note({
     content,
-    id: Date.now().toString(),
     date: new Date(),
-    important: true,
-  };
+    important: important || false,
+  });
+
+  const newNote = await note.save();
   res.json(newNote);
-  notes = [...notes, newNote];
   res.status(201).end();
 });
 
@@ -75,6 +77,6 @@ app.delete('/api/notes/:id', (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3006;
+const PORT = process.env.PORT;
 app.listen(PORT);
 console.log(`Server running on port ${PORT}`);
