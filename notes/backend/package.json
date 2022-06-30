@@ -5,9 +5,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "test": "NODE_ENV=test node --experimental-vm-modules node_modules/.bin/jest"
   },
   "author": "",
   "license": "ISC",
@@ -17,5 +17,9 @@
     "express": "^4.18.1",
     "mongoose": "^6.4.0",
     "nodemon": "^2.0.18"
+  },
+  "devDependencies": {
+    "jest": "^28.1.1",
+    "supertest": "^6.2.3"
   }
 }
