@@ -14,10 +14,6 @@ test('blogs are returned as json', async () => {
     .expect('Content-Type', /application\/json/);
 }, 100000);
 
-afterAll(() => {
-  mongoose.connection.close();
-});
-
 test('there are two blogs', async () => {
   const res = await api.get(endpoint);
   expect(res.body).toHaveLength(2);
@@ -48,4 +44,16 @@ test('a blog can be added', async () => {
 
   const savedBlog = res.body.map(({ title }) => title);
   expect(savedBlog).toContain('Peru21');
+});
+
+test('ids are ids instead of _ids', async () => {
+  const res = await api.get(endpoint);
+
+  const ids = await res.body.map(({ id }) => id);
+
+  ids.map((id) => expect(id).toBeDefined());
+});
+
+afterAll(() => {
+  mongoose.connection.close();
 });

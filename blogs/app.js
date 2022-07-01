@@ -5,6 +5,7 @@ import * as logger from './utils/logger.js';
 import * as middleware from './utils/middleware.js';
 import cors from 'cors';
 import { blogRouter } from './routes/blogs.routes.js';
+import { userRouter } from './routes/users.routes.js';
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/blogs', blogRouter);
+app.use('/api/users', userRouter);
 
 app.use(middleware.requestLogger);
 app.use(middleware.unknownEndpoint);
