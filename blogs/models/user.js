@@ -1,13 +1,24 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  name: String,
-  username: String,
-  passwordHash: String,
-  notes: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Note',
+  username: {
+    type: String,
+    unique: true,
+    required: true,
   },
+  name: {
+    type: String,
+  },
+  passwordHash: {
+    type: String,
+    required: true,
+  },
+  blogs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Blog',
+    },
+  ],
 });
 
 userSchema.set('toJSON', {

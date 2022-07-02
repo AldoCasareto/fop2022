@@ -13,9 +13,7 @@ export const getBlogs = async (req, res, next) => {
 export const postBlog = async (req, res, next) => {
   const { userId, author, url, title, likes } = req.body;
 
-  const user = await User.find(userId);
-
-  console.log('user', user);
+  const user = await User.findById(userId);
 
   const blog = new Blog({
     author,
@@ -27,10 +25,10 @@ export const postBlog = async (req, res, next) => {
 
   try {
     const savedBlog = await blog.save();
-    console.log(savedBlog);
+
     user.blogs = user.blogs.concat(savedBlog._id);
     await user.save();
-    res.status(201).json(savedBlog);
+    res.json(savedBlog);
   } catch (error) {
     next(error);
   }
