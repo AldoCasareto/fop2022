@@ -3,7 +3,10 @@ import { User } from '../models/user.js';
 
 export const getBlogs = async (req, res, next) => {
   try {
-    const blog = await Blog.find({});
+    const blog = await Blog.find({}).populate('user', {
+      username: 1,
+      name: 1,
+    });
     return res.json(blog);
   } catch (error) {
     next(error);
