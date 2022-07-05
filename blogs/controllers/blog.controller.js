@@ -1,5 +1,15 @@
+import jwt from 'jsonwebtoken';
 import { Blog } from '../models/blog.js';
 import { User } from '../models/user.js';
+
+const getToken = (req) => {
+  const auth = req.get('authorization');
+
+  if (auth && auth.toLowerCase().startsWith(`bearer `)) {
+    return auth.substring(7);
+  }
+  return null;
+};
 
 export const getBlogs = async (req, res, next) => {
   try {
@@ -16,7 +26,15 @@ export const getBlogs = async (req, res, next) => {
 export const postBlog = async (req, res, next) => {
   const { userId, author, url, title, likes } = req.body;
 
-  const user = await User.findById(userId);
+  const token = getToken(req);
+
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'token missing or invalid' });
+  }
+
+  const user = await User.findById(decodedToken.id);
 
   const blog = new Blog({
     author,

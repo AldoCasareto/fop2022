@@ -19,4 +19,11 @@ export const errorHandler = (req, res, next) => {
   if (error.name === 'ValidationError')
     return res.status(400).json({ error: error.message });
   next();
+  if (error.name === 'JsonWebTokenError') {
+    return res.status(401).json({ error: 'invalid token' });
+  }
+  if (error.name === 'TokenExpiredError') {
+    return res.status(401).json({ error: 'token expired' });
+  }
+  next(error);
 };
