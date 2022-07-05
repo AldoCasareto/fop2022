@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import { usernameLogIn } from '../services/username.services.js';
+import { setToken } from '../services/blog.services.js';
 
-const Blog = () => {
+const LoginForm = ({ handleLogin, user }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
 
-  const handleLogin = (e) => {
+  const handleLoginForm = async (e) => {
     e.preventDefault();
-    const user = {
+    const userObject = {
       username,
       password,
     };
 
     try {
-      const getUser = usernameLogIn(user);
-      setUser(getUser);
+      const userDb = await usernameLogIn(userObject);
+      handleLogin(userDb);
+      setToken(userDb.token);
       setUsername('');
       setPassword('');
     } catch (error) {
@@ -29,7 +30,7 @@ const Blog = () => {
     <>
       <div>Blog</div>
       <h2>{!user ? 'Log in to application' : ` welcome ${user.name}`}</h2>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLoginForm}>
         <label htmlFor='username'>
           username
           <input
@@ -54,4 +55,4 @@ const Blog = () => {
   );
 };
 
-export default Blog;
+export default LoginForm;

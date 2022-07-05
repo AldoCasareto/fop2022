@@ -26,6 +26,8 @@ export const getBlogs = async (req, res, next) => {
 export const postBlog = async (req, res, next) => {
   const { userId, author, url, title, likes } = req.body;
 
+  console.log(req.body);
+
   const token = getToken(req);
 
   const decodedToken = jwt.verify(token, process.env.SECRET);
