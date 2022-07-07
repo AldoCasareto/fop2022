@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
+import Toggable from './components/Toggable';
 
 function App() {
   const [blogs, setBlogs] = useState([]);
@@ -33,8 +34,9 @@ function App() {
       ) : (
         <LoginForm handleLogin={handleLogin} user={user} />
       )}
-
-      <Blog user={user} blogs={blogs} />
+      <Toggable label='blogs'>
+        <Blog user={user} blogs={blogs} />
+      </Toggable>
     </div>
   );
 }

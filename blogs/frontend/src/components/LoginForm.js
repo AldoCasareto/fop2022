@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usernameLogIn } from '../services/username.services.js';
 import { setToken } from '../services/blog.services.js';
 
 const LoginForm = ({ handleLogin, user }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  // useEffect(() => {
+  //   const loggedUserJSON = window.localStorage.getItem('loggedUser');
+  //   if (loggedUserJSON) {
+  //     const userJson = JSON.parse(loggedUserJSON);
+  //     handleLogin(userJson);
+  //     setToken(userJson.token);
+  //   }
+  // }, []);
 
   const handleLoginForm = async (e) => {
     e.preventDefault();
@@ -17,14 +26,13 @@ const LoginForm = ({ handleLogin, user }) => {
       const userDb = await usernameLogIn(userObject);
       handleLogin(userDb);
       setToken(userDb.token);
+      window.localStorage.setItem('loggedUser', JSON.stringify(userDb));
       setUsername('');
       setPassword('');
     } catch (error) {
       console.error(error);
     }
   };
-
-  console.log(user);
 
   return (
     <>
